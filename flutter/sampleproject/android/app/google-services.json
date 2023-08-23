@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "928080643655",
+    "project_id": "sarmaya-73fea",
+    "storage_bucket": "sarmaya-73fea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928080643655:android:334672c916c19526c29362",
+        "android_client_info": {
+          "package_name": "com.example.sampleproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928080643655-gs4mhjrkg4fe5v11ufose4f3kfedk17b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw_VkzhactUn1bjStII_IqNknJOdAEaOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928080643655-gs4mhjrkg4fe5v11ufose4f3kfedk17b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
