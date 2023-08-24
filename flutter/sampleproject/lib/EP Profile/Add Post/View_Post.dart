@@ -70,6 +70,7 @@ class _PostingDataState extends State<PostingData> {
                 final postId = postData[index].id;
                 final title = data?['title'] ?? '';
                 final description = data?['description'] ?? '';
+                final createdBy = data?['createdBy'] ?? '';
 
                 final isLiked = likeStatus[postId] ?? false;
 
@@ -95,6 +96,14 @@ class _PostingDataState extends State<PostingData> {
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.black, // Change the description text color here
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Possted by: $createdBy', // Display the user who created the post
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
                           ),
                         ),
                         SizedBox(height: 10),

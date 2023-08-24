@@ -27,11 +27,13 @@ class Signup extends State<SignUpScreen> {
   final passwordController = TextEditingController();
   final phonecontroller = TextEditingController();
   final confirmpassword = TextEditingController();
-  int maxlength = 5;
+  int maxlength = 11;
 
   var options = [
     'Investor',
     'Entrepreneur',
+    'Admin',
+
   ];
   var _currentItemSelected = "Investor";
   var rool = "Investor";

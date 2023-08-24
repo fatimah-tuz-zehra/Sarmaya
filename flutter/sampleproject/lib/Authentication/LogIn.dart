@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:sampleproject/Authentication/admin.dart';
 import 'package:sampleproject/Investor%20Profile/investor_login.dart';
 import 'package:sampleproject/LuckyDraw/SpinWheelScreen.dart';
 import 'package:sampleproject/Investor%20Profile/investorLotto.dart';
@@ -242,7 +243,17 @@ class Initstate extends State<LoginScreen> {
                 builder: (context) => const InvestorSpinWheel(),
               ),
             );
-          } else {
+          }
+          else if (documentsnapshot.get('role') == 'Admin') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                // builder: (context) => const investor_login(),
+                builder: (context) => const admin(),
+              ),
+            );
+          }
+          else {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -281,51 +292,4 @@ class Initstate extends State<LoginScreen> {
     }
   }
 }
-//
-//   Future signin() async {
-//     final isValid = _formKey.currentState!.validate();
-//
-//     try {
-//       await FirebaseAuth.instance.signInWithEmailAndPassword(
-//           email: emailcontroller.text, password: passcontroller.text);
-//       User? user = FirebaseAuth.instance.currentUser;
-//       FirebaseFirestore.instance
-//           .collection('Users')
-//           .doc(user?.uid)
-//           .get()
-//           .then((DocumentSnapshot documentsnapshot) {
-//         if (documentsnapshot.exists) {
-//           if (documentsnapshot.get('role') == 'admin') {
-//             Navigator.pushReplacement(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => const SpinWheel(),
-//               ),
-//             );
-//           } else {
-//             Navigator.pushReplacement(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => const investor_login(),
-//               ),
-//             );
-//           }
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             SnackBar(
-//               content: Text('Logged In!'),
-//             ),
-//           );
-//         } else {
-//           Navigator.pushReplacement(
-//             context,
-//             MaterialPageRoute(
-//               builder: (context) => LoginScreen(),
-//             ),
-//           );
-//         }
-//       });
-//     } on FirebaseAuthException catch (e) {
-//     }
-//     Navigator.pop(context);
-//   }
-// }
+

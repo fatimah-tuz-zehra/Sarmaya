@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,8 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _userNameController = TextEditingController();
+
   bool _isUploading = false;
 
   Future<void> _uploadImageAndSubmitForm() async {
@@ -24,11 +27,15 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
 
       final title = _titleController.text;
       final description = _descriptionController.text;
+      final user = FirebaseAuth.instance.currentUser;
+      final userName = user?.displayName ?? '';
 
       try {
         await FirebaseFirestore.instance.collection('Posting').add({
           'title': title,
           'description': description,
+          'createdBy': userName,
+           // 'verified': false,
         });
 
         // Data saved successfully
