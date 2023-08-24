@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:sampleproject/Authentication/admin.dart';
+import 'package:sampleproject/Admin/Adminnavbar.dart';
+import 'package:sampleproject/Admin/admin.dart';
 import 'package:sampleproject/Investor%20Profile/investor_login.dart';
 import 'package:sampleproject/LuckyDraw/SpinWheelScreen.dart';
 import 'package:sampleproject/Investor%20Profile/investorLotto.dart';
@@ -249,7 +250,7 @@ class Initstate extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                 // builder: (context) => const investor_login(),
-                builder: (context) => const admin(),
+                builder: (context) => const AdminNavbar(),
               ),
             );
           }
