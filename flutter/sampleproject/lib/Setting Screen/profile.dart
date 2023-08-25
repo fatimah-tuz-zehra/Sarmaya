@@ -8,30 +8,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sampleproject/EP%20Profile/ep.dart';
 import 'package:sampleproject/Setting%20Screen/updateprofile.dart';
 import '../EP Profile/Navbar.dart';
+import 'global.dart' as global;
 
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
+final user = FirebaseAuth.instance.currentUser!;
+final uid = FirebaseAuth.instance.currentUser!.uid;
+
 class _ProfilePageState extends State<ProfilePage> {
+  var name = '';
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final nameController = TextEditingController();
-  final fnameController = TextEditingController();
-  final contactController = TextEditingController();
-  final cnicController = TextEditingController();
-  final addressController = TextEditingController();
-  final cityController = TextEditingController();
-  final countryController = TextEditingController();
-  final accController = TextEditingController();
-  final occController = TextEditingController();
+  final emailController = TextEditingController(text: global.email);
+  final nameController = TextEditingController(text: global.name);
+  final fnameController = TextEditingController(text: global.fathername);
+  final contactController = TextEditingController(text: global.contact);
+  final cnicController = TextEditingController(text: global.cnic);
+  final addressController = TextEditingController(text: global.address);
+  final cityController = TextEditingController(text: global.city);
+  final countryController = TextEditingController(text: global.country);
+  final accController = TextEditingController(text: global.acc);
+  final occController = TextEditingController(text: global.occupation);
   int maxLength = 11;
   int maxLength1 = 13;
   int maxLength2 = 17;
   @override
+  @override
+  void initState() {
+    global.readdata(user);
+    super.initState();
+  }
 
-
+  @override
   void dispose() {
     super.dispose();
     emailController.dispose();
@@ -59,12 +69,10 @@ class _ProfilePageState extends State<ProfilePage> {
       final String accNumber = accController.text;
       final String occupation = occController.text;
       final CollectionReference user_profile =
-      FirebaseFirestore.instance.collection('user_profile');
+          FirebaseFirestore.instance.collection('user_profile');
 
       // Create a document reference with a unique user ID
-      final DocumentReference userRef = user_profile.doc('uid');
-
-
+      final DocumentReference userRef = user_profile.doc(uid);
 
       await userRef.set({
         'name': name,
@@ -79,7 +87,6 @@ class _ProfilePageState extends State<ProfilePage> {
         'occupation': occupation,
       });
 
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Profile updated successfully.'),
@@ -88,147 +95,154 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         flexibleSpace: Container(
-        decoration: BoxDecoration(
-        gradient: LinearGradient(
-        colors: [Colors.black45, Colors.deepOrange],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-    ),
-    ),
-    ),
-    title: Text("Edit Profile"),
-    centerTitle: true,
-    titleTextStyle: TextStyle(
-    fontSize: 27,
-    fontWeight: FontWeight.w600,
-    color: Colors.orange,
-    ),
-    elevation: 1,
-    // leading: IconButton(
-    // icon: Icon(
-    // Icons.arrow_back,
-    // color: Colors.orange,
-    // ),
-    // onPressed: () {
-    // Navigator.pop(
-    // context);
-    // },
-    // ),
-    ),
-
-
-        body: Container(
-    padding: EdgeInsets.only(left: 16, top: 10, right: 16),
-    child: GestureDetector(
-    onTap: () {
-    FocusScope.of(context).unfocus();
-    },
-    child: Form(
-    key: _formKey,
-    child: ListView(
-      children: [
-        TextFormField(
-          inputFormatters: [
-            // only accept letters from a to z
-            FilteringTextInputFormatter(
-                RegExp(r'[a-zA-Z]'), allow: true)
-          ],
-          controller: nameController,
-          validator: ValidationBuilder().minLength(5, 'Enter a valid name').build(),
-
-          decoration: InputDecoration(labelText: "Name"),
-        ),
-        TextFormField(
-          controller: emailController,
-
-          validator: ValidationBuilder().email('Enter a valid email').build(),
-          decoration: InputDecoration(labelText: "Email"),
-        ),
-        TextFormField(
-          controller: fnameController,
-          validator: ValidationBuilder().minLength(3, 'Enter a valid name').build(),
-          decoration: InputDecoration(labelText: "Father's Name"),
-        ),
-        IntlPhoneField(
-          controller: contactController,
-          validator: (phone) {
-            if (phone == null || phone.completeNumber.isEmpty) {
-              return 'Enter a valid contact number';
-            }
-            if (phone.completeNumber.length < maxLength) {
-              return 'Contact number should be $maxLength digits';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            labelText: "Contact",
-          ),
-          initialCountryCode: 'PK',
-          onChanged: (phone) {
-            print(phone.completeNumber);
-          },
-        ),
-
-        TextFormField(
-          controller: cnicController,
-          validator: ValidationBuilder().maxLength(maxLength1, 'Enter a valid CNIC number').build(),
-          decoration: InputDecoration(labelText: "CNIC"),
-        ),
-        TextFormField(
-          controller: addressController,
-          validator: ValidationBuilder().minLength(5, 'Enter a valid address').build(),
-          decoration: InputDecoration(labelText: "Address"),
-        ),
-        TextFormField(
-          controller: cityController,
-          validator: ValidationBuilder().minLength(3, 'Enter a valid city').build(),
-          decoration: InputDecoration(labelText: "City"),
-        ),
-        TextFormField(
-          controller: countryController,
-          validator: ValidationBuilder().minLength(3, 'Enter a valid country').build(),
-          decoration: InputDecoration(labelText: "Country"),
-        ),
-        TextFormField(
-          controller: accController,
-          validator: ValidationBuilder().maxLength(maxLength2, 'Enter a valid account number').build(),
-          decoration: InputDecoration(labelText: "Account Number"),
-        ),
-        TextFormField(
-          controller: occController,
-          validator: ValidationBuilder().minLength(3, 'Enter a valid occupation').build(),
-          decoration: InputDecoration(labelText: "Occupation"),
-        ),
-        SizedBox(height: 30),
-        ElevatedButton(
-          onPressed: updateUserProfile,
-          child: Text(
-            "Save",
-            style: TextStyle(fontSize: 16),
-          ),
-          style: ButtonStyle(
-            padding: MaterialStateProperty.all<EdgeInsets>(
-              EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.black45, Colors.deepOrange],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
           ),
         ),
-      ],
-    ),
-    ),
-
-    ),
-
-    ),
-
-
+        title: Text("Edit Profile"),
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 27,
+          fontWeight: FontWeight.w600,
+          color: Colors.orange,
+        ),
+        elevation: 1,
+        // leading: IconButton(
+        // icon: Icon(
+        // Icons.arrow_back,
+        // color: Colors.orange,
+        // ),
+        // onPressed: () {
+        // Navigator.pop(
+        // context);
+        // },
+        // ),
+      ),
+      body: Container(
+        padding: EdgeInsets.only(left: 16, top: 10, right: 16),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  inputFormatters: [
+                    // only accept letters from a to z
+                    FilteringTextInputFormatter(RegExp(r'[a-zA-Z]'),
+                        allow: true)
+                  ],
+                  controller: nameController,
+                  validator: ValidationBuilder()
+                      .minLength(5, 'Enter a valid name')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Name"),
+                ),
+                TextFormField(
+                  controller: emailController,
+                  validator:
+                      ValidationBuilder().email('Enter a valid email').build(),
+                  decoration: InputDecoration(labelText: "Email"),
+                ),
+                TextFormField(
+                  controller: fnameController,
+                  validator: ValidationBuilder()
+                      .minLength(3, 'Enter a valid name')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Father's Name"),
+                ),
+                IntlPhoneField(
+                  controller: contactController,
+                  validator: (phone) {
+                    if (phone == null || phone.completeNumber.isEmpty) {
+                      return 'Enter a valid contact number';
+                    }
+                    if (phone.completeNumber.length < maxLength) {
+                      return 'Contact number should be $maxLength digits';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "Contact",
+                  ),
+                  initialCountryCode: 'PK',
+                  onChanged: (phone) {
+                    print(phone.completeNumber);
+                  },
+                ),
+                TextFormField(
+                  controller: cnicController,
+                  validator: ValidationBuilder()
+                      .maxLength(maxLength1, 'Enter a valid CNIC number')
+                      .build(),
+                  decoration: InputDecoration(labelText: "CNIC"),
+                ),
+                TextFormField(
+                  controller: addressController,
+                  validator: ValidationBuilder()
+                      .minLength(5, 'Enter a valid address')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Address"),
+                ),
+                TextFormField(
+                  controller: cityController,
+                  validator: ValidationBuilder()
+                      .minLength(3, 'Enter a valid city')
+                      .build(),
+                  decoration: InputDecoration(labelText: "City"),
+                ),
+                TextFormField(
+                  controller: countryController,
+                  validator: ValidationBuilder()
+                      .minLength(3, 'Enter a valid country')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Country"),
+                ),
+                TextFormField(
+                  controller: accController,
+                  validator: ValidationBuilder()
+                      .maxLength(maxLength2, 'Enter a valid account number')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Account Number"),
+                ),
+                TextFormField(
+                  controller: occController,
+                  validator: ValidationBuilder()
+                      .minLength(3, 'Enter a valid occupation')
+                      .build(),
+                  decoration: InputDecoration(labelText: "Occupation"),
+                ),
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: updateUserProfile,
+                  child: Text(
+                    "Save",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.orange),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
-

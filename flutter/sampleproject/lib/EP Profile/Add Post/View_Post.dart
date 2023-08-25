@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sampleproject/Authentication/LogIn.dart';
+import 'package:sampleproject/Investor%20Profile/investorLotto.dart';
 
 import '../Navbar.dart';
-
 
 class PostingData extends StatefulWidget {
   @override
@@ -11,6 +12,69 @@ class PostingData extends StatefulWidget {
 
 class _PostingDataState extends State<PostingData> {
   Map<String, bool> likeStatus = {};
+
+  @override
+  void initState() {
+    super.initState();
+    initializeLikedPosts();
+  }
+
+  Future<void> initializeLikedPosts() async {
+    List<String> likedPosts = await fetchLikedPosts();
+
+    setState(() {
+      likedPosts.forEach((postId) {
+        likeStatus[postId] = true; // Mark posts liked by the user as true
+      });
+    });
+  }
+
+  Future<List<String>> fetchLikedPosts() async {
+    List<String> likedPosts = [];
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('history')
+        .where('likedby', isEqualTo: uid) // Replace uid with the actual user ID
+        .get();
+    likedPosts =
+        querySnapshot.docs.map((doc) => doc['postid'] as String).toList();
+
+    return likedPosts;
+  }
+
+  Future<void> like(final postData, final postId) async {
+    var ref = FirebaseFirestore.instance.collection('history');
+    try {
+      // Check if a document with the same postid exists
+      QuerySnapshot querySnapshot =
+          await ref.where('postid', isEqualTo: postId).get();
+
+      // If no existing document with the same postid is found, then add the new one
+      if (querySnapshot.size == 0) {
+        var data = {
+          'title': postData['title'],
+          'msg': postData['description'],
+          'postedby': postData['createdBy'],
+          'timestamp': Timestamp.now(),
+          'likedby': uid,
+          'postid': postId
+        };
+        await ref.add(data);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Post Liked'),
+          duration: const Duration(seconds: 2),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Post already liked'),
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    } on FirebaseException catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +91,8 @@ class _PostingDataState extends State<PostingData> {
         ),
         title: Text("View Post"),
         centerTitle: true,
-        titleTextStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
+        titleTextStyle: TextStyle(
+            fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
         elevation: 1,
         leading: IconButton(
           icon: Icon(
@@ -35,7 +100,8 @@ class _PostingDataState extends State<PostingData> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Navbar()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Navbar()));
           },
         ),
       ),
@@ -43,7 +109,8 @@ class _PostingDataState extends State<PostingData> {
         color: Colors.white, // Set the background color to grey
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance.collection('Posting').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -95,7 +162,8 @@ class _PostingDataState extends State<PostingData> {
                           description,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black, // Change the description text color here
+                            color: Colors
+                                .black, // Change the description text color here
                           ),
                         ),
                         SizedBox(height: 5),
@@ -109,17 +177,39 @@ class _PostingDataState extends State<PostingData> {
                         SizedBox(height: 10),
                         Row(
                           children: [
+                            // IconButton(
+                            //   icon: Icon(
+                            //     isLiked
+                            //         ? Icons.favorite
+                            //         : Icons.favorite_border,
+                            //     color: isLiked ? Colors.red : null,
+                            //   ),
+                            //   onPressed: () {
+                            //     setState(() {
+                            //       likeStatus[postId] = !isLiked;
+                            //     });
+                            //     if (likeStatus[postId] == true) {
+                            //       like(postData[index], postId);
+                            //     }
+                            //   },
+                            // ),
                             IconButton(
                               icon: Icon(
-                                isLiked ? Icons.favorite : Icons.favorite_border,
+                                isLiked
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
                                 color: isLiked ? Colors.red : null,
                               ),
                               onPressed: () {
                                 setState(() {
                                   likeStatus[postId] = !isLiked;
                                 });
+                                if (likeStatus[postId] == true) {
+                                  like(postData[index], postId);
+                                }
                               },
                             ),
+
                             IconButton(
                               icon: Icon(Icons.comment),
                               onPressed: () {

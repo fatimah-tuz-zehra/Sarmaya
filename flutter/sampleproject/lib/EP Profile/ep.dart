@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:random_color/random_color.dart';
 import 'package:sampleproject/EP%20Profile/Add%20Post/proposal_navbar.dart';
 import 'package:sampleproject/EP%20Profile/chat.dart';
+import 'package:sampleproject/EP%20Profile/historyep.dart';
 import 'package:sampleproject/LuckyDraw/lotto.dart';
 
 class EnterpreneuerProfile extends StatefulWidget {
@@ -11,7 +13,23 @@ class EnterpreneuerProfile extends StatefulWidget {
   State<EnterpreneuerProfile> createState() => _EnterpreneuerProfileState();
 }
 
+int currentRewards = 0;
+
 class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
+  Future<void> updateRewards() async {
+    DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+    setState(() {
+      currentRewards = snapshot['rewards'];
+    });
+  }
+
+  @override
+  void initState() {
+    updateRewards();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,17 +86,21 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                           color: Color(0xFFF5F5F7),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: TextField(
-                          cursorHeight: 20,
-                          autofocus: false,
-                          decoration: InputDecoration(
-                            hintText: "Daily Bonds",
-                            prefixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
+                        child: Container(
+                          decoration: BoxDecoration(border: Border.all()),
+                          child: Text('Wallet Amount $currentRewards'),
                         ),
+                        // TextField(
+                        //   cursorHeight: 20,
+                        //   autofocus: false,
+                        //   decoration: InputDecoration(
+                        //     hintText: "Daily Bonds",
+                        //     prefixIcon: Icon(Icons.search),
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                     ),
                     Padding(
@@ -95,7 +117,9 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ProposalNavbar()),
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProposalNavbar()),
                                     );
                                   },
                                 ),
@@ -107,7 +131,8 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   onTap: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => lotto()),
+                                      MaterialPageRoute(
+                                          builder: (context) => lotto()),
                                     );
                                   },
                                 ),
@@ -125,7 +150,8 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   onTap: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ChatScreen()),
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatScreen()),
                                     );
                                   },
                                 ),
@@ -134,6 +160,13 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                 child: Category(
                                   imagePath: "assets/history.png",
                                   title: "History",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ephistory()),
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -157,7 +190,9 @@ class Category extends StatelessWidget {
   final String title;
   final Function()? onTap;
 
-  const Category({Key? key, required this.imagePath, required this.title, this.onTap}) : super(key: key);
+  const Category(
+      {Key? key, required this.imagePath, required this.title, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

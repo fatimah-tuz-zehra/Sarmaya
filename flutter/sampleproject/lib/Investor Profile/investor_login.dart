@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sampleproject/EP%20Profile/Add%20Post/View_Post.dart';
 import 'package:sampleproject/Investor%20Profile/InvestorViewPost.dart';
+import 'package:sampleproject/Investor%20Profile/history.dart';
 import '../EP Profile/chat.dart';
 import '../LuckyDraw/lotto.dart';
 
@@ -11,7 +14,25 @@ class investor_login extends StatefulWidget {
   State<investor_login> createState() => _investorState();
 }
 
+int currentRewards = 0;
+final uid = FirebaseAuth.instance.currentUser!.uid;
+
 class _investorState extends State<investor_login> {
+  Future<void> updateRewards() async {
+    DocumentSnapshot snapshot =
+        await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+    setState(() {
+      currentRewards = snapshot['rewards'];
+    });
+  }
+
+  @override
+  void initState() {
+    updateRewards();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,17 +89,21 @@ class _investorState extends State<investor_login> {
                           color: Color(0xFFF5F5F7),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: TextField(
-                          cursorHeight: 20,
-                          autofocus: false,
-                          decoration: InputDecoration(
-                            hintText: "Daily Bonds",
-                            prefixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
+                        child: Container(
+                          decoration: BoxDecoration(border: Border.all()),
+                          child: Text('Wallet Amount $currentRewards'),
                         ),
+                        // child: TextField(
+                        //   cursorHeight: 20,
+                        //   autofocus: false,
+                        //   decoration: InputDecoration(
+                        //     hintText: "Daily Bonds",
+                        //     prefixIcon: Icon(Icons.search),
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                     ),
                     Padding(
@@ -95,8 +120,10 @@ class _investorState extends State<investor_login> {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                    MaterialPageRoute(builder: (context) =>InvestorViewPost()),
-                                     );
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              InvestorViewPost()),
+                                    );
                                   },
                                 ),
                               ),
@@ -107,7 +134,8 @@ class _investorState extends State<investor_login> {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => lotto()),
+                                      MaterialPageRoute(
+                                          builder: (context) => lotto()),
                                     );
                                   },
                                 ),
@@ -125,16 +153,23 @@ class _investorState extends State<investor_login> {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => ChatScreen()),
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatScreen()),
                                     );
                                   },
                                 ),
                               ),
-
                               Expanded(
                                 child: Category(
                                   imagePath: "assets/history.png",
                                   title: "History",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => history()),
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -158,7 +193,9 @@ class Category extends StatelessWidget {
   final String title;
   final Function()? onTap;
 
-  const Category({Key? key, required this.imagePath, required this.title, this.onTap}) : super(key: key);
+  const Category(
+      {Key? key, required this.imagePath, required this.title, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,5 +230,3 @@ class Category extends StatelessWidget {
     );
   }
 }
-
-
