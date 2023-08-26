@@ -76,16 +76,6 @@ class _ChatScreenState extends State<ChatScreen> {
         titleTextStyle: TextStyle(
             fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
         elevation: 1,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-
-          },
-        ),
       ),
       body: Column(
         children: [

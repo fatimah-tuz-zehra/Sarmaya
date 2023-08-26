@@ -73,15 +73,17 @@ class _InvestorViewPostState extends State<InvestorViewPost> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => investorNavbar()));
+            Navigator.pop(context);
           },
         ),
       ),
       body: Container(
         color: Colors.white, // Set the background color to grey
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance.collection('Posting').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('Posting')
+              .where('approved', isEqualTo: 'true')
+              .snapshots(),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -108,8 +110,8 @@ class _InvestorViewPostState extends State<InvestorViewPost> {
               itemBuilder: (BuildContext context, int index) {
                 final data = postData[index].data();
                 final postId = postData[index].id;
-                final title = data?['title'] ?? '';
-                final description = data?['description'] ?? '';
+                final title = data['title'] ?? '';
+                final description = data['description'] ?? '';
 
                 final isLiked = likeStatus[postId] ?? false;
 

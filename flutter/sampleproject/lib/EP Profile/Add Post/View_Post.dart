@@ -94,21 +94,14 @@ class _PostingDataState extends State<PostingData> {
         titleTextStyle: TextStyle(
             fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
         elevation: 1,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Navbar()));
-          },
-        ),
       ),
       body: Container(
         color: Colors.white, // Set the background color to grey
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance.collection('Posting').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('Posting')
+              .where('approved', isEqualTo: 'true')
+              .snapshots(),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -135,9 +128,9 @@ class _PostingDataState extends State<PostingData> {
               itemBuilder: (BuildContext context, int index) {
                 final data = postData[index].data();
                 final postId = postData[index].id;
-                final title = data?['title'] ?? '';
-                final description = data?['description'] ?? '';
-                final createdBy = data?['createdBy'] ?? '';
+                final title = data['title'] ?? '';
+                final description = data['description'] ?? '';
+                final createdBy = data['createdBy'] ?? '';
 
                 final isLiked = likeStatus[postId] ?? false;
 

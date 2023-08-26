@@ -172,7 +172,7 @@ class Initstate extends State<LoginScreen> {
               child: GestureDetector(
                 child: Text("Forget Password"),
                 onTap: () => {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ForgetPassword())),

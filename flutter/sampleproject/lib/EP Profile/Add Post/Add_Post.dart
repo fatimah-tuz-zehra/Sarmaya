@@ -35,7 +35,8 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
           'title': title,
           'description': description,
           'createdBy': userName,
-           // 'verified': false,
+          'approved': 'false'
+          // 'verified': false,
         });
 
         // Data saved successfully
@@ -47,7 +48,9 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
           _isUploading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Post created successfully!')),
+          SnackBar(
+              content: Text(
+                  'Post created successfully!, will be checked and approved Shortly')),
         );
       } catch (error) {
         // Error occurred while saving data
@@ -87,17 +90,9 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
         ),
         title: Text("Add Post"),
         centerTitle: true,
-        titleTextStyle: TextStyle(fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
+        titleTextStyle: TextStyle(
+            fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
         elevation: 1,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Navbar()));
-          },
-        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

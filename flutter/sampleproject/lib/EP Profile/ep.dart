@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:random_color/random_color.dart';
 import 'package:sampleproject/EP%20Profile/Add%20Post/proposal_navbar.dart';
 import 'package:sampleproject/EP%20Profile/chat.dart';
 import 'package:sampleproject/EP%20Profile/historyep.dart';
+import 'package:sampleproject/EP%20Profile/mylotto.dart';
 import 'package:sampleproject/LuckyDraw/lotto.dart';
 
 class EnterpreneuerProfile extends StatefulWidget {
@@ -14,6 +16,7 @@ class EnterpreneuerProfile extends StatefulWidget {
 }
 
 int currentRewards = 0;
+final uid = FirebaseAuth.instance.currentUser!.uid;
 
 class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
   Future<void> updateRewards() async {
@@ -88,7 +91,7 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Wallet Amount $currentRewards'),
+                          child: Text('Current Balance:  $currentRewards'),
                         ),
                         // TextField(
                         //   cursorHeight: 20,
@@ -129,7 +132,7 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   imagePath: "assets/lottery.png",
                                   title: "LOTTO",
                                   onTap: () {
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => lotto()),
@@ -148,7 +151,7 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   imagePath: "assets/chat.png",
                                   title: "Community",
                                   onTap: () {
-                                    Navigator.pushReplacement(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ChatScreen()),
@@ -165,6 +168,24 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ephistory()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Category(
+                                  imagePath: "assets/chat.png",
+                                  title: "Purchased Lotto",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => mylotto()),
                                     );
                                   },
                                 ),

@@ -5,6 +5,7 @@ import 'package:sampleproject/EP%20Profile/Add%20Post/View_Post.dart';
 import 'package:sampleproject/Investor%20Profile/InvestorViewPost.dart';
 import 'package:sampleproject/Investor%20Profile/history.dart';
 import '../EP Profile/chat.dart';
+import '../EP Profile/mylotto.dart';
 import '../LuckyDraw/lotto.dart';
 
 class investor_login extends StatefulWidget {
@@ -29,7 +30,6 @@ class _investorState extends State<investor_login> {
   @override
   void initState() {
     updateRewards();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -91,19 +91,8 @@ class _investorState extends State<investor_login> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Wallet Amount $currentRewards'),
+                          child: Text('Current balance: $currentRewards'),
                         ),
-                        // child: TextField(
-                        //   cursorHeight: 20,
-                        //   autofocus: false,
-                        //   decoration: InputDecoration(
-                        //     hintText: "Daily Bonds",
-                        //     prefixIcon: Icon(Icons.search),
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //     ),
-                        //   ),
-                        // ),
                       ),
                     ),
                     Padding(
@@ -121,8 +110,9 @@ class _investorState extends State<investor_login> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              InvestorViewPost()),
+                                        builder: (context) =>
+                                            InvestorViewPost(),
+                                      ),
                                     );
                                   },
                                 ),
@@ -168,6 +158,24 @@ class _investorState extends State<investor_login> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => history()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Category(
+                                  imagePath: "assets/chat.png",
+                                  title: "Purchased Lotto",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => mylotto()),
                                     );
                                   },
                                 ),

@@ -5,17 +5,17 @@ import 'package:intl/intl.dart';
 
 import '../EP Profile/Navbar.dart';
 
-class lotto extends StatefulWidget {
-  const lotto({Key? key}) : super(key: key);
+class mylotto extends StatefulWidget {
+  const mylotto({Key? key}) : super(key: key);
 
   @override
-  State<lotto> createState() => _lottoState();
+  State<mylotto> createState() => _mylottoState();
 }
 
 final uid = FirebaseAuth.instance.currentUser!.uid;
 var documentId;
 
-class _lottoState extends State<lotto> {
+class _mylottoState extends State<mylotto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +29,7 @@ class _lottoState extends State<lotto> {
             ),
           ),
         ),
-        title: Text("Lotto Tickets"),
+        title: Text("My Tickets"),
         centerTitle: true,
         titleTextStyle: TextStyle(
             fontSize: 27, fontWeight: FontWeight.w600, color: Colors.white),
@@ -39,8 +39,8 @@ class _lottoState extends State<lotto> {
         padding: const EdgeInsets.all(20),
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection('Lotto')
-              .where('Sold', isEqualTo: 'no')
+              .collection('Purchased Lotto')
+              .where('uid', isEqualTo: uid)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -63,7 +63,7 @@ class _lottoState extends State<lotto> {
                 itemBuilder: ((context, index) {
                   var data =
                       snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                  DateTime dateTime = data['Timestamp']
+                  DateTime dateTime = data['purchaseddate']
                       .toDate(); // Convert Timestamp to DateTime
 
                   String formattedDate = DateFormat.yMMMMd().format(dateTime);
@@ -146,40 +146,21 @@ class _lottoState extends State<lotto> {
                             Row(
                               children: [
                                 Text(
-                                  "${data['Prize']} Rs",
+                                  "${data['prize']} Rs",
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.black),
                                 ),
                                 Spacer(),
                               ],
                             ),
-                            Row(children: [
-                              Text(
-                                "Ticket No: ${data['Ticket']}",
+                            Center(
+                              child: Text(
+                                "Ticket No: ${data['ticketnumber']}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
                               ),
-                              Spacer(),
-                              GestureDetector(
-                                  onTap: () {
-                                    getDocumentIdByFieldValue(data);
-                                    upload(data);
-                                    showDialogForAppllied();
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: 100,
-                                    color: Colors.deepOrange,
-                                    child: Center(
-                                        child: Text(
-                                      "Buy Tickets",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    )),
-                                  ))
-                            ]),
+                            ),
                           ],
                         ),
                       ),
@@ -194,97 +175,5 @@ class _lottoState extends State<lotto> {
         ),
       ),
     );
-  }
-
-  showDialogForAppllied() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            height: 290,
-            child: Column(
-              children: [
-                Image.asset("assets/cng1.png"),
-                const SizedBox(
-                  height: 8,
-                ),
-                const Text(
-                  "your application is submitted",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: Container(
-                    child: const Text(
-                      "Thankyou for choosing us, in 10 days you will recive a"
-                      " confirmation of your request. Remember to be attentive to your email"
-                      " where you will recive all information.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> getDocumentIdByFieldValue(final dataaa) async {
-    try {
-      final collectionReference =
-          FirebaseFirestore.instance.collection('Lotto');
-      final querySnapshot = await collectionReference
-          .where('Ticket', isEqualTo: dataaa['Ticket'])
-          .get();
-
-      if (querySnapshot.size > 0) {
-        final documentSnapshot = querySnapshot.docs.first;
-        setState(() {
-          documentId = documentSnapshot.id;
-        });
-        documentId = documentSnapshot.id;
-
-        print('Document ID: $documentId');
-      } else {
-        print('No matching documents found.');
-      }
-    } catch (e) {
-      print('Error: ${e.toString()}');
-    }
-  }
-
-  Future upload(final dataa) async {
-    try {
-      final docuser = FirebaseFirestore.instance.collection('Purchased Lotto');
-
-      final data1 = {
-        'amount': dataa['amount'],
-        'ticketnumber': dataa['Ticket'],
-        'uid': uid,
-        'prize': dataa['Prize'],
-        'purchaseddate': Timestamp.now(),
-      };
-      await docuser.add(data1);
-
-      final updateticket =
-          FirebaseFirestore.instance.collection('Lotto').doc(documentId);
-      await updateticket.update({'Sold': 'yes'});
-      // Navigator.pop(context);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Tickets Added!')));
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
-    }
   }
 }

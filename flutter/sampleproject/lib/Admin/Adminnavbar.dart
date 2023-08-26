@@ -5,7 +5,6 @@ import 'package:sampleproject/Admin/adminfeedback.dart';
 import '../Setting Screen/profile.dart';
 import '../Setting Screen/settings.dart';
 
-
 class AdminNavbar extends StatefulWidget {
   const AdminNavbar({super.key});
 
@@ -14,36 +13,41 @@ class AdminNavbar extends StatefulWidget {
 }
 
 class _AdminNavbarState extends State<AdminNavbar> {
-  int _selectedIndex=0;
-  List<Widget>_widgetOptions=<Widget>[
+  int _selectedIndex = 0;
+  List<Widget> _widgetOptions = <Widget>[
     admin(),
-     AdminFeedbackScreen(),
-     SettingScreen()
-
+    AdminFeedbackScreen(),
+    SettingScreen()
   ];
-  void _onItemTap(int index){
+  void _onItemTap(int index) {
     setState(() {
       _selectedIndex = index;
     });
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body : _widgetOptions[_selectedIndex],
+      body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home, color: Colors.deepOrange),label: "Home"  ),
-          BottomNavigationBarItem(icon: Icon(Icons.person, color: Colors.deepOrange,), label: "Profile",),
-          BottomNavigationBarItem(icon: Icon(Icons.settings, color: Colors.deepOrange), label: "Settings", backgroundColor:Colors.black)
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.deepOrange), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.feedback,
+              color: Colors.deepOrange,
+            ),
+            label: "Feedback",
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings, color: Colors.deepOrange),
+              label: "Settings",
+              backgroundColor: Colors.black)
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTap,
-
       ),
-
-
     );
   }
 }
