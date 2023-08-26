@@ -1,22 +1,17 @@
-// import 'dart:js';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:sampleproject/Setting%20Screen/rating.dart';
+
 import '../Authentication/LogIn.dart';
 import '../Authentication/change_pass.dart';
-import '../EP Profile/Navbar.dart';
-import 'Terms&Conditions.dart';
-
-
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({super.key});
+import '../Setting Screen/Terms&Conditions.dart';
+class AdminSetting extends StatefulWidget {
+  const AdminSetting({Key? key}) : super(key: key);
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  State<AdminSetting> createState() => _AdminSettingState();
 }
-class _SettingScreenState extends State<SettingScreen> {
 
+class _AdminSettingState extends State<AdminSetting> {
   late User? _currentUser;
 
   @override
@@ -31,8 +26,6 @@ class _SettingScreenState extends State<SettingScreen> {
       _currentUser = user;
     });
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +91,6 @@ class _SettingScreenState extends State<SettingScreen> {
       children: [
         // colorTile(Icons.person_outline, Colors.deepPurple,"My Profile", NotificationScreen()),
         colorTile(Icons.privacy_tip, Colors.blue,"Change Password",changepassword()),
-        colorTile(Icons.feedback_outlined, Colors.pink,"Feedback",RatingScreen()),
         colorTile(Icons.bookmark, Colors.brown,"Terms & Conditions", TandC()),
         Padding(
           padding: const EdgeInsets.all(20.0),
@@ -146,7 +138,3 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 }
-
-
-
-

@@ -48,30 +48,6 @@ class _adminState extends State<admin> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => post_verification(),
-                    ),
-                  );
-                },
-                child: Container(
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'assets/lottery.png',
-                        height: 50,
-                      ),
-                      Text(
-                        'LOTTO',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
                       builder: (context) => addlotto(),
                     ),
                   );
@@ -81,7 +57,7 @@ class _adminState extends State<admin> {
                     children: [
                       Image.asset(
                         'assets/lottery.png',
-                        height: 50,
+                        height: 100,
                       ),
                       Text(
                         'Add Lotto',
@@ -105,7 +81,7 @@ class _adminState extends State<admin> {
                     children: [
                       Icon(
                         Icons.mark_email_read_outlined,
-                        size: 50,
+                        size: 100,
                       ),
                       Text(
                         'Verify Posts',

@@ -14,7 +14,7 @@ class SpinWheel extends StatefulWidget {
 class _SpinWheelState extends State<SpinWheel> {
   final selected =BehaviorSubject<int>();
   List<int> items = [
-    0,2,5,10,20,
+    0,2,5,0,10,
   ];
   int rewards=0;
   @override

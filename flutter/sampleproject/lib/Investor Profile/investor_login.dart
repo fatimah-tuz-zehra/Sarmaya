@@ -89,9 +89,23 @@ class _investorState extends State<investor_login> {
                           color: Color(0xFFF5F5F7),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Current balance: $currentRewards'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.account_balance_wallet,
+                              size: 40,
+                              color: Colors.deepOrange,
+                            ),
+                            SizedBox(width: 20), // Adjust the spacing
+                            Text(
+                              'Wallet Amount :  $currentRewards',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -105,7 +119,7 @@ class _investorState extends State<investor_login> {
                               Expanded(
                                 child: Category(
                                   imagePath: "assets/addpost.png",
-                                  title: "View Proposal",
+                                  title: "Proposals",
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -169,8 +183,8 @@ class _investorState extends State<investor_login> {
                             children: [
                               Expanded(
                                 child: Category(
-                                  imagePath: "assets/chat.png",
-                                  title: "Purchased Lotto",
+                                  imagePath: "assets/tickets.png",
+                                  title: "My Lotto",
                                   onTap: () {
                                     Navigator.push(
                                       context,

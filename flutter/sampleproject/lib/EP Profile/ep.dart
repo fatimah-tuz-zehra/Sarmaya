@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:random_color/random_color.dart';
 import 'package:sampleproject/EP%20Profile/Add%20Post/proposal_navbar.dart';
 import 'package:sampleproject/EP%20Profile/chat.dart';
 import 'package:sampleproject/EP%20Profile/historyep.dart';
@@ -89,21 +88,24 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                           color: Color(0xFFF5F5F7),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Current Balance:  $currentRewards'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.account_balance_wallet,
+                              size: 40,
+                              color: Colors.deepOrange,
+                            ),
+                            SizedBox(width: 20), // Adjust the spacing
+                            Text(
+                              'Wallet Amount :  $currentRewards',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        // TextField(
-                        //   cursorHeight: 20,
-                        //   autofocus: false,
-                        //   decoration: InputDecoration(
-                        //     hintText: "Daily Bonds",
-                        //     prefixIcon: Icon(Icons.search),
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //     ),
-                        //   ),
-                        // ),
                       ),
                     ),
                     Padding(
@@ -179,8 +181,8 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                             children: [
                               Expanded(
                                 child: Category(
-                                  imagePath: "assets/chat.png",
-                                  title: "Purchased Lotto",
+                                  imagePath: "assets/tickets.png",
+                                  title:"My Lottos",
                                   onTap: () {
                                     Navigator.push(
                                       context,

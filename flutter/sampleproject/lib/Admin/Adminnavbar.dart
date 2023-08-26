@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sampleproject/Admin/Adminsettings.dart';
 import 'package:sampleproject/Admin/admin.dart';
 import 'package:sampleproject/Admin/adminfeedback.dart';
 
@@ -17,7 +18,7 @@ class _AdminNavbarState extends State<AdminNavbar> {
   List<Widget> _widgetOptions = <Widget>[
     admin(),
     AdminFeedbackScreen(),
-    SettingScreen()
+    AdminSetting()
   ];
   void _onItemTap(int index) {
     setState(() {

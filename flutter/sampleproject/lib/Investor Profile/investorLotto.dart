@@ -22,8 +22,8 @@ class _InvestorSpinWheelState extends State<InvestorSpinWheel> {
     0,
     2,
     5,
+    0,
     10,
-    20,
   ];
   int rewards = 0;
   @override
