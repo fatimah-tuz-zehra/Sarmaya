@@ -7,6 +7,7 @@ import 'package:sampleproject/Investor%20Profile/history.dart';
 import '../EP Profile/chat.dart';
 import '../EP Profile/mylotto.dart';
 import '../LuckyDraw/lotto.dart';
+import '../LuckyDraw/openedlotto.dart';
 
 class investor_login extends StatefulWidget {
   const investor_login({Key? key}) : super(key: key);
@@ -26,6 +27,19 @@ class _investorState extends State<investor_login> {
       currentRewards = snapshot['rewards'];
     });
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Perform actions that need to run every time the screen is displayed here
+    updateRewards(); // Replace with your actual action
+  }
+
+  Stream<int> walletBalanceStream = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid) // Replace with actual user ID
+      .snapshots()
+      .map((snapshot) => snapshot['rewards'] as int);
 
   @override
   void initState() {
@@ -68,15 +82,9 @@ class _investorState extends State<investor_login> {
           children: [
             Stack(
               children: [
-                Container(
-                  height: 100,
-                  width: double.infinity,
-                  color: Colors.transparent,
-                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(15),
                     ),
@@ -89,9 +97,24 @@ class _investorState extends State<investor_login> {
                           color: Color(0xFFF5F5F7),
                           borderRadius: BorderRadius.circular(30),
                         ),
+                        // child: StreamBuilder(builder: Builder),
                         child: Container(
                           decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Current balance: $currentRewards'),
+                          child: StreamBuilder<int>(
+                            stream: walletBalanceStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (!snapshot.hasData) {
+                                return Text('No data available.');
+                              } else {
+                                int currentRewards = snapshot.data!;
+                                return Text('Current balance: $currentRewards');
+                              }
+                            },
+                          ),
+                          // child: Text('Current balance: $currentRewards'),
                         ),
                       ),
                     ),
@@ -176,6 +199,19 @@ class _investorState extends State<investor_login> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => mylotto()),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: Category(
+                                  imagePath: "assets/chat.png",
+                                  title: "Opened Lotto",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => openedlotto()),
                                     );
                                   },
                                 ),

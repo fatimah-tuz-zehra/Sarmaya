@@ -8,6 +8,8 @@ import 'package:sampleproject/EP%20Profile/historyep.dart';
 import 'package:sampleproject/EP%20Profile/mylotto.dart';
 import 'package:sampleproject/LuckyDraw/lotto.dart';
 
+import '../LuckyDraw/openedlotto.dart';
+
 class EnterpreneuerProfile extends StatefulWidget {
   const EnterpreneuerProfile({Key? key}) : super(key: key);
 
@@ -27,6 +29,11 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
     });
   }
 
+  Stream<int> walletBalanceStream = FirebaseFirestore.instance
+      .collection('Users')
+      .doc(uid) // Replace with actual user ID
+      .snapshots()
+      .map((snapshot) => snapshot['rewards'] as int);
   @override
   void initState() {
     updateRewards();
@@ -76,7 +83,6 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(15),
                     ),
@@ -91,7 +97,20 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(border: Border.all()),
-                          child: Text('Current Balance:  $currentRewards'),
+                          child: StreamBuilder<int>(
+                            stream: walletBalanceStream,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator();
+                              } else if (!snapshot.hasData) {
+                                return Text('No data available.');
+                              } else {
+                                int currentRewards = snapshot.data!;
+                                return Text('Current balance: $currentRewards');
+                              }
+                            },
+                          ),
                         ),
                         // TextField(
                         //   cursorHeight: 20,
@@ -190,8 +209,22 @@ class _EnterpreneuerProfileState extends State<EnterpreneuerProfile> {
                                   },
                                 ),
                               ),
+                              Expanded(
+                                child: Category(
+                                  imagePath: "assets/chat.png",
+                                  title: "Opened Lotto",
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => openedlotto()),
+                                    );
+                                  },
+                                ),
+                              ),
                             ],
                           ),
+                       
                         ],
                       ),
                     ),

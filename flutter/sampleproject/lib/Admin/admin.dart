@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sampleproject/Admin/addlotto.dart';
+import 'package:sampleproject/Admin/openlotto.dart';
 import 'package:sampleproject/Admin/post_verification.dart';
 
 class admin extends StatefulWidget {
@@ -109,6 +110,30 @@ class _adminState extends State<admin> {
                       ),
                       Text(
                         'Verify Posts',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => openlotto(),
+                    ),
+                  );
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.add_card,
+                        size: 50,
+                      ),
+                      Text(
+                        'Open Lotto',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

@@ -164,8 +164,8 @@ class _lottoState extends State<lotto> {
                               GestureDetector(
                                   onTap: () {
                                     getDocumentIdByFieldValue(data);
-                                    upload(data);
-                                    showDialogForAppllied();
+                                    checkamount(data, data['amount']);
+                                    // upload(data);
                                   },
                                   child: Container(
                                     height: 30,
@@ -249,21 +249,49 @@ class _lottoState extends State<lotto> {
         setState(() {
           documentId = documentSnapshot.id;
         });
-        documentId = documentSnapshot.id;
+        // documentId = documentSnapshot.id;
 
         print('Document ID: $documentId');
       } else {
         print('No matching documents found.');
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+        ),
+      );
       print('Error: ${e.toString()}');
     }
   }
 
-  Future upload(final dataa) async {
+  Future checkamount(final dataa, int bondamount) async {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid) // Replace with the actual user ID
+        .get();
+    int walletBalance = userSnapshot['rewards'] as int;
+    int bondcost = bondamount;
+    if (walletBalance >= bondcost) {
+      int newBalance = walletBalance - bondcost;
+      showDialogForAppllied();
+      upload(dataa, newBalance);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Insufficient  Balance'),
+        ),
+      );
+    }
+  }
+
+  Future upload(final dataa, int newBalance) async {
     try {
       final docuser = FirebaseFirestore.instance.collection('Purchased Lotto');
-
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid) // Replace with the actual user ID
+          .update({'rewards': newBalance});
       final data1 = {
         'amount': dataa['amount'],
         'ticketnumber': dataa['Ticket'],
@@ -278,7 +306,7 @@ class _lottoState extends State<lotto> {
       await updateticket.update({'Sold': 'yes'});
       // Navigator.pop(context);
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Tickets Added!')));
+          .showSnackBar(SnackBar(content: Text('Tickets Purchased!')));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
