@@ -128,7 +128,7 @@ class _investorState extends State<investor_login> {
                               Expanded(
                                 child: Category(
                                   imagePath: "assets/addpost.png",
-                                  title: "View Proposal",
+                                  title: "Proposals",
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -192,8 +192,8 @@ class _investorState extends State<investor_login> {
                             children: [
                               Expanded(
                                 child: Category(
-                                  imagePath: "assets/chat.png",
-                                  title: "Purchased Lotto",
+                                  imagePath: "assets/tickets.png",
+                                  title: "My Lotto",
                                   onTap: () {
                                     Navigator.push(
                                       context,
