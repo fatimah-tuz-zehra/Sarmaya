@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sampleproject/EP%20Profile/Add%20Post/View_Post.dart';
 import 'package:sampleproject/Investor%20Profile/InvestorViewPost.dart';
-import 'package:sampleproject/Investor%20Profile/history.dart';
 import '../EP Profile/chat.dart';
+import '../EP Profile/historyep.dart';
 import '../EP Profile/mylotto.dart';
 import '../LuckyDraw/lotto.dart';
 import '../LuckyDraw/openedlotto.dart';
@@ -180,7 +180,7 @@ class _investorState extends State<investor_login> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => history()),
+                                          builder: (context) => ephistory()),
                                     );
                                   },
                                 ),
